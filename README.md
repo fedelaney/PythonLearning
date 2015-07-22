@@ -1,4 +1,4 @@
 # PythonLearning
-Books, Courses, ProjectEuler
+Books, Courses, Puzzles
 
 I am going to learn Python.
