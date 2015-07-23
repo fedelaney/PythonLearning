@@ -60,3 +60,4 @@ yrmo_grouped.plot() #this is pandas plot which is a wrapper on plt.plot()
 yr_grouped.plot()
 #you can do rolling averages!
 pd.rolling_sum(temps,1000).plot()
+#test
