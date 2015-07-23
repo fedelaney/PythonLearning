@@ -31,7 +31,7 @@ temps = DataFrame(temps, columns=['col'])
 #create an object with a list of list (Q: Why does this return list of list? Can this be done with values?) for first row
 col_n=list(temps.ix[0].str.split())
 #split columns of dataframe and make col_n the column indexes
-temps = pd.DataFrame(list(temps.col.str.split()), columns=names[0])
+temps = pd.DataFrame(list(temps.col.str.split()), columns=col_n[0])
 #drop the duplicate column name row
 temps = temps.drop(temps.index[0])
 #this would strip white space, but I think it's unnecessary: temps.apply(lambda x: x.str.strip())
@@ -46,10 +46,8 @@ temps['YRMO'] = Series(temps['YR']+temps['MO'])
 temps = temps.set_index(['YR','MO', 'YRMO','Lvl']) #Q: added in YRMO so can group and plot, but must be a way to do this with the hierarchical indexing
 temps = temps.stack().unstack(['Lvl'])
 #adding name to day index
-temps.head(50)
+temps.head(100)
 temps.index.names = ['YR','MO', 'YRMO', 'DAY']
-#sorting just in case
-temps.sort(inplace=True, axis=(['YR','MO', 'YRMO','DAYS'])
 #convert TX and TN to numbers
 temps = temps.convert_objects(convert_numeric=True)
 #grouping
@@ -61,4 +59,4 @@ import matplotlib.pyplot as plt
 yrmo_grouped.plot() #this is pandas plot which is a wrapper on plt.plot()
 yr_grouped.plot()
 #you can do rolling averages!
-pd.rolling_sum(temps,300).plot()
+pd.rolling_sum(temps,1000).plot()
