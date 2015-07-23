@@ -41,10 +41,24 @@ temps.replace('M', np.nan, inplace=True)
 #create a column with TX vs TN, change MO so is actually Month
 temps['Lvl'] = Series(temps['MO']).str[-2:]
 temps['MO'] = Series(temps['MO']).str[:-2]
+temps['YRMO'] = Series(temps['YR']+temps['MO'])
 #make year and month indexes (Q: Added Lvl as well does this shape make sense?)
-temps = temps.set_index(['YR','MO','Lvl'])
+temps = temps.set_index(['YR','MO', 'YRMO','Lvl']) #Q: added in YRMO so can group and plot, but must be a way to do this with the hierarchical indexing
+temps = temps.stack().unstack(['Lvl'])
+#adding name to day index
+temps.head(50)
+temps.index.names = ['YR','MO', 'YRMO', 'DAY']
+#sorting just in case
+temps.sort(inplace=True, axis=(['YR','MO', 'YRMO','DAYS'])
+#convert TX and TN to numbers
+temps = temps.convert_objects(convert_numeric=True)
+#grouping
+yrmo_grouped = temps.groupby(level=(['YRMO'])).mean() #Q: really don't think that should need YRMO
+yr_grouped = temps.groupby(level=(['YR'])).mean()
 
 #Let's try graphing!
 import matplotlib.pyplot as plt
-fig = plt.figure()
-ax1 = fig.add_subplot(1,1,1)
+yrmo_grouped.plot() #this is pandas plot which is a wrapper on plt.plot()
+yr_grouped.plot()
+#you can do rolling averages!
+pd.rolling_sum(temps,300).plot()
